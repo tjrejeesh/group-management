@@ -1,0 +1,42 @@
+form{
+  padding-top: 100px;
+}
+
+.input-row {
+}
+
+label {
+  display: block;
+  padding-bottom: 5px;
+}
+
+input, textarea {
+  width: 90%;
+  padding: 5px;
+  margin: 0px 5%;
+  font-size: 16px;
+}
+
+button{
+  float: left;
+  padding: 5px;
+  margin: 0px 5%;
+}
+
+.has-error {
+  border: 1px solid #f44336;
+}
+
+.form-message {
+  padding-top: 2px;
+}
+.form-message.valid {
+  color: #4caf50;
+}
+.form-message.invalid {
+  color: #f44336;
+}
+
+.show-table{
+  padding-top: 100px;
+}

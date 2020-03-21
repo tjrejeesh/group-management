@@ -1,0 +1,48 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+@font-face {
+  font-family: Akkurat Pro;
+}
+
+@font-face {
+  font-family: Akkurat Pro;
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: Akkurat Pro;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: Akkurat Pro;
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: Akkurat Pro;
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: Akkurat Pro;
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: GravurCondPro-Regular;
+}
+
+@font-face {
+  font-family: GravurCondPro-Bold;
+}
+
+.clearfix {
+  float: none;
+  clear: both;
+}
