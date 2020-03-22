@@ -66,7 +66,6 @@ app.post("/api/login", (req, res) => {
 });
 
 app.post("/api/register", (req, res) => {
-    console.log('post body', req.body);
     pool.connect(function(err, client, done) {
         if (err) {
             console.log("Unable to connect to the database due to " + err);
@@ -122,6 +121,143 @@ app.post("/api/users", verifyToken, (req, res) => {
 
     });
 });
+
+app.post("/api/group/add", verifyToken, (req, res) => {
+    console.log('post body', req.body);
+    jwt.verify(req.token, 'secretkey', (err, authData) => {
+        if(err){
+            res.sendStatus(403);
+        }else{
+            pool.connect(function(err, client, done) {
+                if (err) {
+                    console.log("Unable to connect to the database due to " + err);
+                }
+                const sql = 'INSERT INTO group_details (gname, description, created_by, member_id, created_at) ' +
+                    'VALUES ($1, $2, $3, $4, $5);';
+                const param = [
+                    req.body.values.gname,
+                    req.body.values.description,
+                    req.body.values.userId,
+                    req.body.values.userId,
+                    req.body.values.createdAt
+                ];
+                client.query(sql, param, function(err, result) {
+                    done();
+                    if (err) {
+                        console.log(err);
+                        res.status(400).send(err);
+                    }
+                    res.json({
+                        results: result.rows,
+                        authData: authData
+                    })
+                });
+            });
+        }
+
+    });
+});
+
+app.post("/api/groups", verifyToken, (req, res) => {
+    jwt.verify(req.token, 'secretkey', (err, authData) => {
+        if(err){
+            res.sendStatus(403);
+        }else{
+            pool.connect(function(err, client, done) {
+                if (err) {
+                    console.log("Unable to connect to the database due to " + err);
+                }
+                const sql = 'SELECT users.id as user_id, users.name, gname, member_id, ' +
+                    'created_by, created_at, description, group_details.id as group_id FROM ' +
+                    'users INNER JOIN group_details ON ' +
+                    'group_details.created_by = users.id';
+                client.query(sql, function(err, result) {
+                    done();
+                    if (err) {
+                        console.log(err);
+                        res.status(400).send(err);
+                    }
+                    res.json({
+                        results: result.rows,
+                        authData: authData
+                    })
+                });
+            });
+        }
+    });
+});
+
+app.post("/api/mygroups", verifyToken, (req, res) => {
+    jwt.verify(req.token, 'secretkey', (err, authData) => {
+        if(err){
+            res.sendStatus(403);
+        }else{
+            pool.connect(function(err, client, done) {
+                if (err) {
+                    console.log("Unable to connect to the database due to " + err);
+                }
+                const sql = 'SELECT users.id as user_id, users.name, gname, member_id, ' +
+                    'created_by, created_at, description FROM ' +
+                    'users INNER JOIN group_details ON ' +
+                    'group_details.created_by = users.id where users.id=$1';
+                const param = [
+                    req.body.values.userId,
+                ];
+                client.query(sql, param, function(err, result) {
+                    done();
+                    if (err) {
+                        console.log(err);
+                        res.status(400).send(err);
+                    }
+                    res.json({
+                        results: result.rows,
+                        authData: authData
+                    })
+                });
+            });
+        }
+    });
+});
+
+
+app.post("/api/group/join", verifyToken, (req, res) => {
+    console.log('post body', req.body);
+    jwt.verify(req.token, 'secretkey', (err, authData) => {
+        if(err){
+            res.sendStatus(403);
+        }else{
+            pool.connect(function(err, client, done) {
+                if (err) {
+                    console.log("Unable to connect to the database due to " + err);
+                }
+                let sql = '';
+                let param = [req.body.values.group_id, req.body.values.user_id];
+                if(req.body.values.action === 'select') {
+                    sql = 'select count(*) from group_members  ' +
+                    'where group_id = $1 and member_id = $2';
+                }else if(req.body.values.action === 'insert'){
+                    sql = 'INSERT INTO group_members (group_id, member_id) ' +
+                        'VALUES ($1, $2);';
+                }else if(req.body.values.action === 'delete'){
+                    sql = 'delete from group_members where group_id = $1 and member_id = $2'
+                }
+                client.query(sql, param, function(err, result) {
+                    done();
+                    if (err) {
+                        console.log(err);
+                        res.status(400).send(err);
+                    }
+                    res.json({
+                        results: result,
+                        authData: authData
+                    })
+                });
+            });
+        }
+    });
+});
+
+
 
 app.get("/api/posts", (req, res) => {
     pool.connect(function(err, client, done) {

@@ -23,7 +23,7 @@ export default function Login() {
                 }else{
                     localStorage.setItem('login', JSON.stringify({
                         login: true,
-                        id: response.id,
+                        id: response.data.id,
                         email: response.data.email
                     }));
                     localStorage.setItem('token', JSON.stringify({

@@ -1,23 +1,32 @@
 import _ from 'lodash'
 import React, { Component } from 'react'
-import { Table } from 'semantic-ui-react'
+import { Table, Icon, Confirm } from 'semantic-ui-react'
 import axios from "axios";
 import {Link} from "react-router-dom";
 
-export default class Dashboard extends Component {
+export default class MyGroup extends Component {
     state = {
         column: null,
         data: null,
         direction: null,
-        token: null
+        token: null,
+        open: false
     };
+
+    open = () => this.setState({ open: true });
+    close = () => this.setState({ open: false });
+
     componentDidMount(){
         let store = JSON.parse(localStorage.getItem('token'));
+        let loggedInUser = JSON.parse(localStorage.getItem('login'));
         let token = "Bearer " + store.token;
-        axios.post('http://localhost:5000/api/groups',
+        axios.post('http://localhost:5000/api/mygroups',
             {
                 headers: {
                     'authorization': token
+                },
+                values: {
+                    userId: loggedInUser.id,
                 }
             })
             .then(res => {
@@ -55,10 +64,15 @@ export default class Dashboard extends Component {
 
         return (
             <div className="show-table">
+            <Confirm
+                open={this.state.open}
+                onCancel={this.close}
+                onConfirm={this.close}
+            />
             <Table celled fixed>
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell colSpan='5'>
+                        <Table.HeaderCell colSpan='6'>
                             <Link to={'/addgroup'}>Add Group</Link>
                         </Table.HeaderCell>
                     </Table.Row>
@@ -93,20 +107,29 @@ export default class Dashboard extends Component {
                         >
                             Created At
                         </Table.HeaderCell>
+                        <Table.HeaderCell textAlign='center'>
+                            Actions
+                        </Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                    {_.map(data, ({ id, gname, description, created_by, created_at }) => (
-                        <Table.Row key={id}>
-                            <Table.Cell>{id}</Table.Cell>
+                    {_.map(data, ({ user_id, name, gname, description, created_by, created_at }, index) => (
+                        <Table.Row key={index}>
+                            <Table.Cell>{index}</Table.Cell>
                             <Table.Cell>{gname}</Table.Cell>
                             <Table.Cell>{description}</Table.Cell>
-                            <Table.Cell>{created_by}</Table.Cell>
+                            <Table.Cell>{name}</Table.Cell>
                             <Table.Cell>{created_at}</Table.Cell>
+                            <Table.Cell textAlign='center'>
+                                <Icon name='eye' size='large'/>
+                                <Icon name='edit' size='large'/>
+                                <Icon name='delete' size='large' onClick={this.open} />
+                            </Table.Cell>
                         </Table.Row>
                     ))}
                 </Table.Body>
             </Table>
+
             </div>
         )
     }

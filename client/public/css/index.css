@@ -40,6 +40,10 @@ body {
 
 form {
   padding-top: 100px; }
+  form button {
+    float: left;
+    padding: 5px;
+    margin: 0px 5%; }
 
 label {
   display: block;
@@ -50,11 +54,6 @@ input, textarea {
   padding: 5px;
   margin: 0px 5%;
   font-size: 16px; }
-
-button {
-  float: left;
-  padding: 5px;
-  margin: 0px 5%; }
 
 .has-error {
   border: 1px solid #f44336; }

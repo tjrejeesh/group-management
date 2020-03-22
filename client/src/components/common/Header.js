@@ -10,8 +10,8 @@ class Header extends Component{
                 <label className="menu-icon" htmlFor="menu-btn"><span className="navicon"></span></label>
                 <ul className="menu">
                     <li><Link to={'/'}>Create Group</Link></li>
-                    <li><Link to={'/home'}>My Groups</Link></li>
-                    <li><Link to={'/'}>List groups</Link></li>
+                    <li><Link to={'/mygroups'}>My Groups</Link></li>
+                    <li><Link to={'/home'}>List groups</Link></li>
                 </ul>
             </header>
         )

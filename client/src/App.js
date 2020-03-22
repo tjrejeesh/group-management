@@ -9,6 +9,8 @@ import decode from 'jwt-decode';
 import LoginPage from "./components/users/LoginPage";
 import Register from "./components/users/Register";
 import Header from "./components/common/Header";
+import AddGroup from "./components/groups/AddGroup";
+import MyGroup from "./components/dashboard/MyGroup";
 
 const Home = () => (
     <Dashboard />
@@ -20,6 +22,14 @@ const UserLogin = () => (
 
 const RegisterPage = () => (
     <Register />
+);
+
+const AddGroupPage = () => (
+    <AddGroup />
+);
+
+const MyGroupPage = () => (
+    <MyGroup />
 );
 
 const checkAuth = () => {
@@ -59,6 +69,8 @@ class App extends Component {
                         <Switch>
                             <Route exact path="/" render={props => <UserLogin {...props} />} />
                             <Route exact path="/register" component={RegisterPage} />
+                            <AuthRoute exact path="/addgroup" component={AddGroupPage} />
+                            <AuthRoute exact path="/mygroups" component={MyGroupPage} />
                             <AuthRoute exact path="/home" component={Home} />
                         </Switch>
                     </div>
