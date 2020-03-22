@@ -197,7 +197,7 @@ app.post("/api/mygroups", verifyToken, (req, res) => {
                     console.log("Unable to connect to the database due to " + err);
                 }
                 const sql = 'SELECT users.id as user_id, users.name, gname, member_id, ' +
-                    'created_by, created_at, description FROM ' +
+                    'created_by, created_at, description, group_details.id as group_id FROM ' +
                     'users INNER JOIN group_details ON ' +
                     'group_details.created_by = users.id where users.id=$1';
                 const param = [
@@ -256,8 +256,62 @@ app.post("/api/group/join", verifyToken, (req, res) => {
         }
     });
 });
+app.post("/api/group/delete", verifyToken, (req, res) => {
+    console.log('post body', req.body);
+    jwt.verify(req.token, 'secretkey', (err, authData) => {
+        if(err){
+            res.sendStatus(403);
+        }else{
+            pool.connect(function(err, client, done) {
+                if (err) {
+                    console.log("Unable to connect to the database due to " + err);
+                }
+                const sql = 'delete from group_details where id = $1';
+                const param = [req.body.values.groupId];
+                client.query(sql, param, function(err, result) {
+                    done();
+                    if (err) {
+                        console.log(err);
+                        res.status(400).send(err);
+                    }
+                    res.json({
+                        results: result,
+                        authData: authData
+                    })
+                });
+            });
+        }
+    });
+});
 
 
+app.post("/api/group/edit", verifyToken, (req, res) => {
+    console.log('post body', req.body);
+    jwt.verify(req.token, 'secretkey', (err, authData) => {
+        if(err){
+            res.sendStatus(403);
+        }else{
+            pool.connect(function(err, client, done) {
+                if (err) {
+                    console.log("Unable to connect to the database due to " + err);
+                }
+                const sql = 'select * from group_details where id = $1';
+                const param = [req.body.values.group_id];
+                client.query(sql, param, function(err, result) {
+                    done();
+                    if (err) {
+                        console.log(err);
+                        res.status(400).send(err);
+                    }
+                    res.json({
+                        results: result.rows,
+                        authData: authData
+                    })
+                });
+            });
+        }
+    });
+});
 
 app.get("/api/posts", (req, res) => {
     pool.connect(function(err, client, done) {

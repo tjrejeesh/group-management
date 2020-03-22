@@ -126,7 +126,7 @@ export default class Dashboard extends Component {
             <Table celled fixed>
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell colSpan='6'>
+                        <Table.HeaderCell colSpan='5'>
                             <Link to={'/addgroup'}>Add Group</Link>
                         </Table.HeaderCell>
                     </Table.Row>
@@ -155,12 +155,6 @@ export default class Dashboard extends Component {
                         >
                             Created By
                         </Table.HeaderCell>
-                        <Table.HeaderCell
-                            sorted={column === 'created_at' ? direction : null}
-                            onClick={this.handleSort('created_at')}
-                        >
-                            Created At
-                        </Table.HeaderCell>
                         <Table.HeaderCell textAlign='center'>
                             Joined?
                         </Table.HeaderCell>
@@ -169,13 +163,12 @@ export default class Dashboard extends Component {
                 <Table.Body>
                     {_.map(data, ({ user_id, name, gname, description, member_id, created_by, created_at, group_id }, index) => (
                         <Table.Row key={index}>
-                            <Table.Cell>{index}</Table.Cell>
+                            <Table.Cell>{index + 1}</Table.Cell>
                             <Table.Cell>{gname}</Table.Cell>
                             <Table.Cell>{description}</Table.Cell>
                             <Table.Cell>
                                 {this.handleJoinStatus(member_id) ? <Label ribbon color='green'>Me</Label> : name}
                              </Table.Cell>
-                            <Table.Cell>{created_at}</Table.Cell>
                             <Table.Cell textAlign='center'>
                                 {this.handleJoinStatus(member_id) ?
                                     <label>Admin</label>

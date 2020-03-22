@@ -30,25 +30,30 @@ const handleAddGroup = (values) => {
             }
         })
         .then(response => {
+            window.location = '/mygroups';
             console.log(response);
         })
         .catch(function (err) {
             console.log("Error", err)
         });
-    window.location = '/home';
 };
 
 class AddGroup extends Component{
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
             success: false
         }
     }
     render(){
+        const {selectedGroup} = this.props;
+        console.log(selectedGroup);
         return (
             <Formik
-                initialValues={{gname:'', description:''}}
+                initialValues={{
+                    gname: '',
+                    description: '',
+                }}
                 validationSchema={validationSchema}
                 onSubmit={(values={
                     created_by:1,
