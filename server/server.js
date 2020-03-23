@@ -35,7 +35,7 @@ app.post("/api/login", (req, res) => {
             console.log("Unable to connect to the database due to " + err);
         }
         const sql = 'SELECT * FROM users WHERE email=$1 and password=$2';
-        const param = [req.body.values.email, req.body.values.password]
+        const param = [req.body.values.email.toLowerCase(), req.body.values.password]
         client.query(sql, param, function(err, result) {
             done();
             if (err) {
@@ -53,7 +53,6 @@ app.post("/api/login", (req, res) => {
                     name: result.rows[0].name,
                     email: result.rows[0].email,
                 };
-                console.log(user);
                 jwt.sign({user}, 'secretkey', {expiresIn: '1h'}, (err, token) => {
                     res.json({
                         token,
@@ -68,22 +67,27 @@ app.post("/api/login", (req, res) => {
 });
 
 app.post("/api/register", (req, res) => {
-    pool.connect(function(err, client, done) {
-        if (err) {
-            console.log("Unable to connect to the database due to " + err);
-        }
-        const sql = 'INSERT INTO users (name, email, password) ' +
-            'VALUES ($1, $2, $3);';
-        const param = [req.body.values.name, req.body.values.email, req.body.values.password];
-        client.query(sql, param, function(err, result) {
-            done();
+    try {
+        pool.connect(function (err, client, done) {
             if (err) {
-                console.log(err);
-                res.status(400).send(err);
+                console.log("Unable to connect to the database due to " + err);
             }
-            res.status(200).send(result.rows);
+            const sql = 'INSERT INTO users (name, email, password) ' +
+                'VALUES ($1, $2, $3);';
+            const param = [req.body.values.name, req.body.values.email.toLowerCase(), req.body.values.password];
+            client.query(sql, param, function (err, result) {
+                done();
+                if (err) {
+                    console.log(err);
+                    res.status(400).send(err);
+                }
+                if(result)res.status(200).send(result.rows);
+            });
         });
-    });
+    }
+    catch (e) {
+        console.log(e);
+    }
 });
 
 function verifyToken(req, res, next){
@@ -125,7 +129,6 @@ app.post("/api/users", verifyToken, (req, res) => {
 });
 
 app.post("/api/group/add", verifyToken, (req, res) => {
-    console.log('post body', req.body);
     jwt.verify(req.token, 'secretkey', (err, authData) => {
         if(err){
             res.sendStatus(403);
@@ -161,7 +164,6 @@ app.post("/api/group/add", verifyToken, (req, res) => {
 });
 
 app.post("/api/group/update", verifyToken, (req, res) => {
-    console.log('post body', req.body);
     jwt.verify(req.token, 'secretkey', (err, authData) => {
         if(err){
             res.sendStatus(403);
@@ -256,7 +258,6 @@ app.post("/api/mygroups", verifyToken, (req, res) => {
 
 
 app.post("/api/group/join", verifyToken, (req, res) => {
-    console.log('post body', req.body);
     jwt.verify(req.token, 'secretkey', (err, authData) => {
         if(err){
             res.sendStatus(403);
@@ -292,7 +293,6 @@ app.post("/api/group/join", verifyToken, (req, res) => {
     });
 });
 app.post("/api/group/delete", verifyToken, (req, res) => {
-    console.log('post body', req.body);
     jwt.verify(req.token, 'secretkey', (err, authData) => {
         if(err){
             res.sendStatus(403);
@@ -321,7 +321,6 @@ app.post("/api/group/delete", verifyToken, (req, res) => {
 
 
 app.post("/api/group/edit", verifyToken, (req, res) => {
-    console.log('post body', req.body);
     jwt.verify(req.token, 'secretkey', (err, authData) => {
         if(err){
             res.sendStatus(403);
@@ -349,7 +348,6 @@ app.post("/api/group/edit", verifyToken, (req, res) => {
 });
 
 app.post("/api/group/list", verifyToken, (req, res) => {
-    console.log('post body', req.body);
     jwt.verify(req.token, 'secretkey', (err, authData) => {
         if(err){
             res.sendStatus(403);
@@ -379,7 +377,6 @@ app.post("/api/group/list", verifyToken, (req, res) => {
 
 
 app.post("/api/group/membership", verifyToken, (req, res) => {
-    console.log('post body', req.body);
     jwt.verify(req.token, 'secretkey', (err, authData) => {
         if(err){
             res.sendStatus(403);
@@ -426,7 +423,6 @@ app.get("/api/posts", (req, res) => {
 });
 
 app.post("/api/addproduct", (req, res) => {
-    console.log('post body', req.body);
     pool.connect(function(err, client, done) {
         if (err) {
             console.log("Unable to connect to the database due to " + err);
@@ -445,7 +441,6 @@ app.post("/api/addproduct", (req, res) => {
 });
 
 app.post("/api/updateproduct", (req, res) => {
-    console.log('post body', req.body);
     pool.connect(function(err, client, done) {
         if (err) {
             console.log("Unable to connect to the database due to " + err);
@@ -464,7 +459,6 @@ app.post("/api/updateproduct", (req, res) => {
 });
 
 app.post("/api/deleteproduct", (req, res) => {
-    console.log('post body', req.body);
     pool.connect(function(err, client, done) {
         if (err) {
             console.log("Unable to connect to the database due to " + err);
