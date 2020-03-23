@@ -16,7 +16,6 @@ export default function AddProduct() {
     const addNewProduct = (values) => {
         axios.post(`http://localhost:3000/api/addproduct`, {values})
             .then(res => {
-                console.log(res);
             })
             .catch(function (err) {
                 console.log("Error", err)

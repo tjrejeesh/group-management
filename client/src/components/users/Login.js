@@ -29,7 +29,6 @@ export default function Login() {
     const handleLogin = (values) => {
         axios.post('http://localhost:5000/api/login', {values})
             .then(response => {
-                console.log(response);
                 if(response.data.login_status === 'invalid'){
                     notify('Invalid email address or password! ' +
                         'Please try to login again or register.');

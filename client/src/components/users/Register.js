@@ -17,26 +17,38 @@ const validationSchema = Yup.object().shape({
         .email("Please enter a valid email address")
         .required("Please enter your email address"),
     password: Yup.string()
+        .min(6, "Please enter minimum 6 characters")
         .required("Please enter your password")
 });
 
-const notify = (message) => {
-    toast.success(message, {
-        position: toast.POSITION.TOP_CENTER
-    });
+const notify = (message, status) => {
+    if(status === 'valid') {
+        toast.success(message, {
+            position: toast.POSITION.TOP_CENTER
+        });
+    }else{
+        toast.error(message, {
+            position: toast.POSITION.TOP_CENTER
+        });
+    }
 };
 
 const handleRegister = (values) => {
     axios.post('http://localhost:5000/api/register', {values})
         .then(response => {
             notify('You have been successfully registered! ' +
-                'Please login to use our service');
-            console.log(response);
+                'Please login to use our service', 'valid');
+            setTimeout(function () {
+                window.location = '/';
+            }, 2000);
         })
         .catch(function (err) {
-            notify('Error ! Don\'t worry try again.');
+            notify('Don\'t worry, something went wrong!! ' +
+                'You are already an existing member or you have network error.' +
+                'Please check and try again', 'invalid');
             console.log("Error", err)
         });
+
 };
 
 class Register extends Component{

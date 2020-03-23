@@ -25,7 +25,6 @@ export default class Membership extends Component {
                 }
             })
             .then(res => {
-                console.log(res);
                 const group = res.data.results;
                 this.setState({ data: group });
             })
@@ -61,7 +60,6 @@ export default class Membership extends Component {
                 }
             })
             .then(response => {
-                console.log(response.data.results.rows[0].count);
                 if(response.data.results.rows[0].count == 0) {
                     axios.post('http://localhost:5000/api/group/join',
                         {
@@ -75,7 +73,6 @@ export default class Membership extends Component {
                             }
                         })
                         .then(response => {
-                            console.log(response);
                         })
                         .catch(function (err) {
                             console.log("Error", err)
@@ -93,7 +90,6 @@ export default class Membership extends Component {
                             }
                         })
                         .then(response => {
-                            console.log(response);
                         })
                         .catch(function (err) {
                             console.log("Error", err)

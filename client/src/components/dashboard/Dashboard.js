@@ -43,7 +43,6 @@ export default class Dashboard extends Component {
                         }
                     })
                     .then(res => {
-                        console.log(res);
                         const group = res.data.results;
                         this.setState({ data: group });
                     })
@@ -57,7 +56,6 @@ export default class Dashboard extends Component {
                 isLoading: false,
                 data: _.filter(this.state.data, isMatch),
             });
-            console.log(this.state);
         }, 300);
     };
 
@@ -71,7 +69,6 @@ export default class Dashboard extends Component {
                 }
             })
             .then(res => {
-                console.log(res);
                 const group = res.data.results;
                 this.setState({ data: group });
             })
@@ -126,9 +123,7 @@ export default class Dashboard extends Component {
             })
             .then(response => {
                 if(response.data.results.rows[0].count > 0){
-                    console.log('member', group_id);
                 }else{
-                    console.log('Non member', group_id);
                 }
             })
             .catch(function (err) {
@@ -167,7 +162,6 @@ export default class Dashboard extends Component {
                             }
                         })
                         .then(response => {
-                            console.log(response);
                         })
                         .catch(function (err) {
                             console.log("Error", err)
@@ -186,7 +180,6 @@ export default class Dashboard extends Component {
                             }
                         })
                         .then(response => {
-                            console.log(response);
                         })
                         .catch(function (err) {
                             console.log("Error", err)

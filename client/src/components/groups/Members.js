@@ -29,7 +29,6 @@ export default class Members extends Component {
                 setTimeout(function () {
                     window.location = '/mygroups';
                 }, 2000);
-                console.log(response);
             })
             .catch(function (err) {
                 console.log("Error", err)

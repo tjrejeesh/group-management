@@ -97,7 +97,6 @@ class AddGroup extends Component{
                     }
                 })
                 .then(res => {
-                    console.log(res.data.results[0].gname);
                     this.setState({
                         groupId: res.data.results[0].id,
                         gname: res.data.results[0].gname,
