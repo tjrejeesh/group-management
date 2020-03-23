@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {Container} from 'react-bootstrap'
+
 import {
     BrowserRouter as Router,
     Route, Switch, Redirect
@@ -73,10 +76,11 @@ const AuthRoute = ({ component: Component, ...rest }) => (
 class App extends Component {
     render() {
         return (
+
             <div className="App">
                 <Router>
                     <Header/>
-                    <div>
+                    <Container>
                         <Switch>
                             <Route exact path="/" render={props => <UserLogin {...props} />} />
                             <Route exact path="/register" component={RegisterPage} />
@@ -86,9 +90,10 @@ class App extends Component {
                             <AuthRoute exact path="/mygroups" component={MyGroupPage} />
                             <AuthRoute exact path="/home" component={Home} />
                         </Switch>
-                    </div>
+                    </Container>
                 </Router>
             </div>
+
         );
     }
 }

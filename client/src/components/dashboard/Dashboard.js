@@ -2,6 +2,8 @@ import _ from 'lodash'
 import React, { Component } from 'react'
 import {Icon, Table, Label, Search} from 'semantic-ui-react'
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const initialState = { isLoading: false, results: [], value: '' }
 
@@ -13,7 +15,18 @@ export default class Dashboard extends Component {
         token: null,
         ...initialState
     };
-
+    notify = (message) => {
+        if(message === 'subscribe') {
+            toast.success('You are a member in this group now', {
+                position: toast.POSITION.TOP_CENTER
+            });
+        }else{
+            toast.warn('You are no longer a member in this group now! ' +
+                'However, still you can click and join the thumb.', {
+                position: toast.POSITION.TOP_CENTER
+            });
+        }
+    };
     handleResultSelect = (e, { result }) => this.setState({ value: result.title })
 
     handleSearchChange = (e, { value }) => {
@@ -158,6 +171,7 @@ export default class Dashboard extends Component {
                         .catch(function (err) {
                             console.log("Error", err)
                         });
+                    this.notify('subscribe');
                 }else{
                     axios.post('http://localhost:5000/api/group/join',
                         {
@@ -176,6 +190,7 @@ export default class Dashboard extends Component {
                         .catch(function (err) {
                             console.log("Error", err)
                         });
+                    this.notify('unsubscribe');
                 }
             })
             .catch(function (err) {
@@ -188,6 +203,7 @@ export default class Dashboard extends Component {
 
         return (
             <div className="show-table">
+                <ToastContainer />
             <Table celled fixed>
                 <Table.Header>
                     <Table.Row>
@@ -249,8 +265,8 @@ export default class Dashboard extends Component {
                                 {this.handleJoinStatus(member_id) ?
                                     <label>Admin</label>
                                     :
-                                    <Icon name='thumbs down outline' size='large'
-                                          color={this.checkMembership(group_id) ? 'green' : 'red'}
+                                    <Icon name='thumbs up outline' size='large'
+                                          //color={this.checkMembership(group_id) ? 'green' : 'red'}
                                           title='Please click to join'
                                           onClick={() => this.handleJoinGroup(group_id)}
                                     />

@@ -3,8 +3,8 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import Error from "../common/Error";
 import axios from 'axios';
-import {Link} from "react-router-dom";
-import { Button } from 'semantic-ui-react'
+import { Button } from 'semantic-ui-react';
+import {Row} from 'react-bootstrap'
 
 const validationSchema = Yup.object().shape({
     gname: Yup.string()
@@ -133,9 +133,10 @@ class AddGroup extends Component{
                          handleSubmit,
                          isSubmitting
                      }) => (
-                        <form onSubmit={handleSubmit}>
-                            <div className={"input-row"}>
-                                <label htmlFor="gname">Group Name</label>
+                        <form onSubmit={handleSubmit} className={groupId ? 'edit-form' : ''}>
+                            <Row><label htmlFor="gname">Group Name</label></Row>
+                            <Row>
+
                                 <input
                                     type="text"
                                     name="gname"
@@ -147,9 +148,10 @@ class AddGroup extends Component{
                                     className={touched.gname && errors.gname ? 'has-error' : null}
                                 />
                                 <Error touched={touched.gname} message={errors.gname}/>
-                            </div>
-                            <div className={"input-row"}>
-                                <label htmlFor="description">description</label>
+                            </Row>
+                            <Row><label htmlFor="description">description</label></Row>
+                            <Row>
+
                                 <input
                                     type="text"
                                     name="description"
@@ -161,14 +163,14 @@ class AddGroup extends Component{
                                     className={touched.description && errors.description ? 'has-error' : null}
                                 />
                                 <Error touched={touched.description} message={errors.description}/>
-                            </div>
+                            </Row>
                             <Error message={this.state.success}/>
-                            <div className={"input-row"}>
-                                <Button className="add-group" floated='right' primary disabled={isSubmitting}>
+                            <Row className="button-alignment">
+                                <Button floated='right' primary disabled={isSubmitting}
+                                        className={groupId ? 'update-button' : ''}>
                                     {!groupId ? 'Add Group' : 'Update'}
                                 </Button>
-                                {!groupId ? <Link to={'/home'}>Home</Link> : ''}
-                            </div>
+                            </Row>
                         </form>
                     )
                 }

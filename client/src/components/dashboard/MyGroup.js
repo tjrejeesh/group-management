@@ -167,7 +167,7 @@ export default class MyGroup extends Component {
             />
             <Confirm
                 className="update-modal"
-                header={`Update your group - ${this.state.groupId}`}
+                header={`Update the selected group`}
                 open={this.state.editMode}
                 onCancel={this.closeEdit}
                 content={this.renderAddGroup(this.state.groupId)}

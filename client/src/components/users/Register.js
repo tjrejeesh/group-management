@@ -4,6 +4,9 @@ import * as Yup from 'yup';
 import Error from "../common/Error";
 import axios from 'axios';
 import {Link} from "react-router-dom";
+import {Row} from 'react-bootstrap'
+import {Button} from "semantic-ui-react";
+import {toast, ToastContainer} from "react-toastify";
 
 const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -17,12 +20,21 @@ const validationSchema = Yup.object().shape({
         .required("Please enter your password")
 });
 
+const notify = (message) => {
+    toast.success(message, {
+        position: toast.POSITION.TOP_CENTER
+    });
+};
+
 const handleRegister = (values) => {
     axios.post('http://localhost:5000/api/register', {values})
         .then(response => {
+            notify('You have been successfully registered! ' +
+                'Please login to use our service');
             console.log(response);
         })
         .catch(function (err) {
+            notify('Error ! Don\'t worry try again.');
             console.log("Error", err)
         });
 };
@@ -57,8 +69,9 @@ class Register extends Component{
                          isSubmitting
                      }) => (
                         <form onSubmit={handleSubmit}>
-                            <div className={"input-row"}>
-                                <label htmlFor="name">Name</label>
+                            <ToastContainer />
+                            <Row><label htmlFor="name">Name</label></Row>
+                            <Row>
                                 <input
                                     type="text"
                                     name="name"
@@ -70,9 +83,10 @@ class Register extends Component{
                                     className={touched.name && errors.name ? 'has-error' : null}
                                 />
                                 <Error touched={touched.name} message={errors.name}/>
-                            </div>
-                            <div className={"input-row"}>
-                                <label htmlFor="title">Email</label>
+                            </Row>
+                            <Row><label htmlFor="title">Email</label></Row>
+                            <Row>
+
                                 <input
                                     type="text"
                                     name="email"
@@ -84,9 +98,10 @@ class Register extends Component{
                                     className={touched.email && errors.email ? 'has-error' : null}
                                 />
                                 <Error touched={touched.email} message={errors.email}/>
-                            </div>
-                            <div className={"input-row"}>
-                                <label htmlFor="description">Password</label>
+                            </Row>
+                            <Row><label htmlFor="description">Password</label></Row>
+                            <Row>
+
                                 <input
                                     type="password"
                                     name="password"
@@ -98,14 +113,14 @@ class Register extends Component{
                                     className={touched.password && errors.password ? 'has-error' : null}
                                 />
                                 <Error touched={touched.password} message={errors.password}/>
-                            </div>
+                            </Row>
                             <Error message={this.state.success}/>
-                            <div className={"input-row"}>
-                                <button type="submit" disabled={isSubmitting}>
+                            <Row className="button-alignment">
+                                <Link className="anchor-tag" to={'/'}>Already registered? Click here to login</Link>
+                                <Button floated='right' primary disabled={isSubmitting}>
                                     Register
-                                </button>
-                                <Link to={'/'}>Login</Link>
-                            </div>
+                                </Button>
+                            </Row>
                         </form>
                     )
                 }

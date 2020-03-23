@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import Login from "./Login";
-import { Link } from 'react-router-dom';
 
 class LoginPage extends Component{
 
@@ -13,7 +12,6 @@ class LoginPage extends Component{
                         :
                         <div>
                             <Login/>
-                            <Link to={'/register'}>Register</Link>
                         </div>
                 }
 

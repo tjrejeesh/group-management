@@ -3,6 +3,10 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import Error from "../common/Error";
 import axios from 'axios';
+import {Button} from "semantic-ui-react";
+import {Row} from 'react-bootstrap'
+import {Link} from "react-router-dom";
+import {toast, ToastContainer} from "react-toastify";
 
 const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -13,13 +17,22 @@ const validationSchema = Yup.object().shape({
 });
 
 
+
 export default function Login() {
+
+    const notify = (message) => {
+        toast.error(message, {
+            position: toast.POSITION.TOP_CENTER
+        });
+    };
+
     const handleLogin = (values) => {
         axios.post('http://localhost:5000/api/login', {values})
             .then(response => {
                 console.log(response);
                 if(response.data.login_status === 'invalid'){
-
+                    notify('Invalid email address or password! ' +
+                        'Please try to login again or register.');
                 }else{
                     localStorage.setItem('login', JSON.stringify({
                         login: true,
@@ -34,9 +47,12 @@ export default function Login() {
                 }
             })
             .catch(function (err) {
+
                 console.log("Error", err)
             });
+
     };
+
     return(
         <Formik
             initialValues={{email:'', password:''}}
@@ -59,8 +75,9 @@ export default function Login() {
                      isSubmitting
                  }) => (
                     <form onSubmit={handleSubmit}>
-                        <div className={"input-row"}>
-                            <label htmlFor="email">Email</label>
+                        <ToastContainer />
+                        <Row><label htmlFor="email">Email</label></Row>
+                        <Row>
                             <input
                                 type="text"
                                 name="email"
@@ -72,9 +89,10 @@ export default function Login() {
                                 className={touched.email && errors.email ? 'has-error' : null}
                             />
                             <Error touched={touched.email} message={errors.email}/>
-                        </div>
-                        <div className={"input-row"}>
-                            <label htmlFor="description">Password</label>
+                        </Row>
+                        <Row><label htmlFor="description">Password</label></Row>
+                        <Row>
+
                             <input
                                 type="password"
                                 name="password"
@@ -86,13 +104,14 @@ export default function Login() {
                                 className={touched.password && errors.password ? 'has-error' : null}
                             />
                             <Error touched={touched.password} message={errors.password}/>
-                        </div>
+                        </Row>
                         <Error message={errors.invalid}/>
-                        <div className={"input-row"}>
-                            <button type="submit" disabled={isSubmitting}>
+                        <Row className="button-alignment">
+                            <Link className="anchor-tag" to={'/register'}>Not registered yet? Click here to register</Link>
+                            <Button primary disabled={isSubmitting}>
                                 Login
-                            </button>
-                        </div>
+                            </Button>
+                        </Row>
                     </form>
                 )
             }
