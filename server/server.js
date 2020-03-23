@@ -50,6 +50,7 @@ app.post("/api/login", (req, res) => {
             }else{
                 const user = {
                     id: result.rows[0].id,
+                    name: result.rows[0].name,
                     email: result.rows[0].email,
                 };
                 console.log(user);
@@ -57,6 +58,7 @@ app.post("/api/login", (req, res) => {
                     res.json({
                         token,
                         id: user.id,
+                        name: user.name,
                         email: user.email
                     })
                 });

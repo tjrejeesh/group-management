@@ -1,10 +1,17 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
+import { Icon } from 'semantic-ui-react'
 
 class Header extends Component{
-    state = {
-        loggedIn: localStorage.getItem('login')
-    };
+    constructor(props){
+        super(props);
+        let user = JSON.parse(localStorage.getItem('login'));
+        this.state = {
+            loggedIn: localStorage.getItem('login'),
+            userName: user ? user.name : ''
+        };
+    }
+
     logout(){
         localStorage.removeItem('login');
         localStorage.removeItem('token');
@@ -21,7 +28,9 @@ class Header extends Component{
                         <li><Link to={'/mygroups'}>My Groups</Link></li>
                         <li><Link to={'/membership'}>Membership</Link></li>
                         <li><Link to={'/home'}>List groups</Link></li>
-                        <li><Link to={'/login'} onClick={this.logout}>Logout</Link></li>
+                        <li><Link to={'/login'} onClick={this.logout}>
+                            <Icon name='address card outline' size='large'/>
+                            {this.state.userName} Logout ?</Link></li>
                     </ul>
                 }
             </header>
