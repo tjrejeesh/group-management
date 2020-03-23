@@ -76,6 +76,13 @@ input, textarea {
 .view-members-modal button:first-child {
   display: none; }
 
+.update-modal .actions button:last-child {
+  display: none; }
+
+.add-group {
+  margin-right: 20px !important;
+  margin-top: 15px !important; }
+
 .header {
   background-color: #fff;
   box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.1);

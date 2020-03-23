@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import Error from "../common/Error";
 import axios from 'axios';
 import {Link} from "react-router-dom";
+import { Button } from 'semantic-ui-react'
 
 const validationSchema = Yup.object().shape({
     gname: Yup.string()
@@ -38,29 +39,86 @@ const handleAddGroup = (values) => {
         });
 };
 
+const handleUpdateGroup = (groupId, values) => {
+    let store = JSON.parse(localStorage.getItem('token'));
+    let token = "Bearer " + store.token;
+    axios.post('http://localhost:5000/api/group/update',
+        {
+            headers: {
+                'authorization': token
+            },
+            values: {
+                ...values,
+                groupId: groupId
+            }
+        })
+        .then(response => {
+            window.location = '/mygroups';
+            console.log(response);
+        })
+        .catch(function (err) {
+            console.log("Error", err)
+        });
+};
+
 class AddGroup extends Component{
     constructor(props){
         super(props);
         this.state = {
-            success: false
+            success: false,
+            gname:null,
+            description: null
         }
     }
+
+    componentDidMount() {
+        const {groupId} = this.props;
+        if(groupId) {
+            let store = JSON.parse(localStorage.getItem('token'));
+            let token = "Bearer " + store.token;
+            axios.post('http://localhost:5000/api/group/edit',
+                {
+                    headers: {
+                        'authorization': token
+                    },
+                    values: {
+                        group_id: groupId,
+                    }
+                })
+                .then(res => {
+                    console.log(res.data.results[0].gname);
+                    this.setState({
+                        groupId: res.data.results[0].id,
+                        gname: res.data.results[0].gname,
+                        description: res.data.results[0].description
+                    });
+                })
+                .catch(function (err) {
+                    console.log("Error", err)
+                });
+        }
+    }
+
     render(){
-        const {selectedGroup} = this.props;
-        console.log(selectedGroup);
+        const {gname, description} = this.state;
+        const {groupId} = this.props;
         return (
             <Formik
                 initialValues={{
-                    gname: '',
-                    description: '',
+                    gname: gname ? gname : '',
+                    description: description ? description : ''
                 }}
+                enableReinitialize
                 validationSchema={validationSchema}
                 onSubmit={(values={
                     created_by:1,
                     created_time: 'time'
                 }, actions) => {
                     setTimeout(() => {
-                        handleAddGroup(values);
+                        if(!groupId){handleAddGroup(values)}
+                        else{
+                            handleUpdateGroup(groupId, values)
+                        }
                         actions.setSubmitting(false);
                     }, 1000);
                 }}
@@ -106,10 +164,10 @@ class AddGroup extends Component{
                             </div>
                             <Error message={this.state.success}/>
                             <div className={"input-row"}>
-                                <button type="submit" disabled={isSubmitting}>
-                                    Add Group
-                                </button>
-                                <Link to={'/home'}>Home</Link>
+                                <Button className="add-group" floated='right' primary disabled={isSubmitting}>
+                                    {!groupId ? 'Add Group' : 'Update'}
+                                </Button>
+                                {!groupId ? <Link to={'/home'}>Home</Link> : ''}
                             </div>
                         </form>
                     )

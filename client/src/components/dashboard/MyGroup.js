@@ -33,12 +33,6 @@ export default class MyGroup extends Component {
     closeEdit = () => {
         this.setState({ editMode: false });
     };
-    confirmEdit = () => {
-        this.setState({ editMode: false });
-    };
-    closeView = () => {
-        this.setState({ viewMode: false });
-    };
     confirmView = () => {
         this.setState({ viewMode: false });
     };
@@ -105,8 +99,8 @@ export default class MyGroup extends Component {
     };
 
     editGroup = (group_id) => {
-        this.setState({ editMode: true});
-        let store = JSON.parse(localStorage.getItem('token'));
+        this.setState({ editMode: true, groupId: group_id});
+        /*let store = JSON.parse(localStorage.getItem('token'));
         let token = "Bearer " + store.token;
         axios.post('http://localhost:5000/api/group/edit',
             {
@@ -122,7 +116,7 @@ export default class MyGroup extends Component {
             })
             .catch(function (err) {
                 console.log("Error", err)
-            });
+            });*/
     };
 
     viewGroup = (group_id) => {
@@ -146,9 +140,9 @@ export default class MyGroup extends Component {
             });
     };
 
-    renderAddGroup(){
+    renderAddGroup(groupId){
         return (
-            <div className="show-table"><AddGroup selectedGroup={this.state.selectedGroup}/></div>
+            <div className="show-table"><AddGroup groupId={groupId}/></div>
         );
     };
 
@@ -173,12 +167,10 @@ export default class MyGroup extends Component {
             />
             <Confirm
                 className="update-modal"
-                header={`Update your group - ${this.state.selectedGroup.gname}`}
+                header={`Update your group - ${this.state.groupId}`}
                 open={this.state.editMode}
                 onCancel={this.closeEdit}
-                onConfirm={this.confirmEdit}
-                content={this.renderAddGroup()}
-                confirmButton="Update"
+                content={this.renderAddGroup(this.state.groupId)}
                 cancelButton="Cancel"
             />
             <Confirm

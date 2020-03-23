@@ -158,6 +158,39 @@ app.post("/api/group/add", verifyToken, (req, res) => {
     });
 });
 
+app.post("/api/group/update", verifyToken, (req, res) => {
+    console.log('post body', req.body);
+    jwt.verify(req.token, 'secretkey', (err, authData) => {
+        if(err){
+            res.sendStatus(403);
+        }else{
+            pool.connect(function(err, client, done) {
+                if (err) {
+                    console.log("Unable to connect to the database due to " + err);
+                }
+                const sql = 'UPDATE group_details SET gname = $1, description = $2 WHERE id = $3';
+                const param = [
+                    req.body.values.gname,
+                    req.body.values.description,
+                    req.body.values.groupId,
+                ];
+                client.query(sql, param, function(err, result) {
+                    done();
+                    if (err) {
+                        console.log(err);
+                        res.status(400).send(err);
+                    }
+                    res.json({
+                        results: result.rows,
+                        authData: authData
+                    })
+                });
+            });
+        }
+
+    });
+});
+
 app.post("/api/groups", verifyToken, (req, res) => {
     jwt.verify(req.token, 'secretkey', (err, authData) => {
         if(err){

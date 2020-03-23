@@ -50,3 +50,14 @@ input, textarea {
     display: none;
   }
 }
+.update-modal{
+  .actions{
+    button:last-child{
+      display: none;
+    }
+  }
+}
+.add-group{
+  margin-right: 20px !important;
+  margin-top: 15px !important;
+}
