@@ -167,6 +167,9 @@ export default class Dashboard extends Component {
                             console.log("Error", err)
                         });
                     this.notify('subscribe');
+                    setTimeout(function () {
+                        window.location = '/membership';
+                    }, 2000);
                 }else{
                     axios.post('http://localhost:5000/api/group/join',
                         {
@@ -185,6 +188,9 @@ export default class Dashboard extends Component {
                             console.log("Error", err)
                         });
                     this.notify('unsubscribe');
+                    setTimeout(function () {
+                        window.location = '/membership';
+                    }, 2000);
                 }
             })
             .catch(function (err) {
@@ -268,6 +274,9 @@ export default class Dashboard extends Component {
                     ))}
                 </Table.Body>
             </Table>
+            <Message className='page-title' color='blue'><Icon name='info circle' size='large'/>
+                Information : Search and click on the thumb icon to subscribe/unsubscribe group.
+            </Message>
             </div>
         )
     }

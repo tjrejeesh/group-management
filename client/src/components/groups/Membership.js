@@ -99,7 +99,7 @@ export default class Membership extends Component {
                             this.notify('You have successfully ' +
                                 'unsubscribed from the group');
                             setTimeout(function () {
-                                window.location = '/membership';
+                                window.location = '/home';
                             }, 2000);
                         })
                         .catch(function (err) {
@@ -165,6 +165,9 @@ export default class Membership extends Component {
                         ))}
                     </Table.Body>
                 </Table>
+                <Message className='page-title' color='blue'><Icon name='info circle' size='large'/>
+                    Information :  Click on the thumb icon to unsubscribe group.
+                </Message>
             </div>
         )
     }

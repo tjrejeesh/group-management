@@ -229,7 +229,9 @@ export default class MyGroup extends Component {
                     ))}
                 </Table.Body>
             </Table>
-
+                <Message className='page-title' color='blue'><Icon name='info circle' size='large'/>
+                    Information : Perform add/edit/delete/view your group details.
+                </Message>
             </div>
         )
     }
