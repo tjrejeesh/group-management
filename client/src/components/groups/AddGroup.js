@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Button } from 'semantic-ui-react';
 import {Row} from 'react-bootstrap'
 import {toast} from "react-toastify";
+import {endPoint} from "../common/api";
 
 const validationSchema = Yup.object().shape({
     gname: Yup.string()
@@ -26,7 +27,7 @@ const handleAddGroup = (values) => {
     let store = JSON.parse(localStorage.getItem('token'));
     let loggedInUser = JSON.parse(localStorage.getItem('login'));
     let token = "Bearer " + store.token;
-    axios.post('http://localhost:5000/api/group/add',
+    axios.post(endPoint('/api/group/add'),
         {
             headers: {
                 'authorization': token
@@ -51,7 +52,7 @@ const handleAddGroup = (values) => {
 const handleUpdateGroup = (groupId, values) => {
     let store = JSON.parse(localStorage.getItem('token'));
     let token = "Bearer " + store.token;
-    axios.post('http://localhost:5000/api/group/update',
+    axios.post(endPoint('/api/group/update'),
         {
             headers: {
                 'authorization': token
@@ -87,7 +88,7 @@ class AddGroup extends Component{
         if(groupId) {
             let store = JSON.parse(localStorage.getItem('token'));
             let token = "Bearer " + store.token;
-            axios.post('http://localhost:5000/api/group/edit',
+            axios.post(endPoint('/api/group/edit'),
                 {
                     headers: {
                         'authorization': token

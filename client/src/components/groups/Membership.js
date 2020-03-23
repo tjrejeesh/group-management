@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import {Icon, Table, Label, Message} from 'semantic-ui-react'
 import axios from "axios";
 import {toast} from "react-toastify";
+import {endPoint} from "../common/api";
 
 export default class Membership extends Component {
     state = {
@@ -16,7 +17,7 @@ export default class Membership extends Component {
         const loggedInUser = JSON.parse(localStorage.getItem('login'));
         const userId = loggedInUser.id;
         let token = "Bearer " + store.token;
-        axios.post('http://localhost:5000/api/group/membership',
+        axios.post(endPoint('/api/group/membership'),
             {
                 headers: {
                     'authorization': token
@@ -54,7 +55,7 @@ export default class Membership extends Component {
         const loggedInUser = JSON.parse(localStorage.getItem('login'));
         const userId = loggedInUser.id;
         let token = "Bearer " + store.token;
-        axios.post('http://localhost:5000/api/group/join',
+        axios.post(endPoint('/api/group/join'),
             {
                 headers: {
                     'authorization': token
@@ -67,7 +68,7 @@ export default class Membership extends Component {
             })
             .then(response => {
                 if(response.data.results.rows[0].count == 0) {
-                    axios.post('http://localhost:5000/api/group/join',
+                    axios.post(endPoint('/api/group/join'),
                         {
                             headers: {
                                 'authorization': token
@@ -84,7 +85,7 @@ export default class Membership extends Component {
                             console.log("Error", err)
                         });
                 }else{
-                    axios.post('http://localhost:5000/api/group/join',
+                    axios.post(endPoint('/api/group/join'),
                         {
                             headers: {
                                 'authorization': token

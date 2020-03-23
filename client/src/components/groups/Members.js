@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import {Icon, Table} from 'semantic-ui-react'
 import axios from "axios";
 import {toast} from "react-toastify";
+import {endPoint} from "../common/api";
 
 export default class Members extends Component {
     notify = () => {
@@ -13,7 +14,7 @@ export default class Members extends Component {
     deleteMember(member_id, group_id){
         let store = JSON.parse(localStorage.getItem('token'));
         let token = "Bearer " + store.token;
-        axios.post('http://localhost:5000/api/group/join',
+        axios.post(endPoint('/api/group/join'),
             {
                 headers: {
                     'authorization': token

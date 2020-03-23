@@ -7,6 +7,7 @@ import {Button} from "semantic-ui-react";
 import {Row} from 'react-bootstrap'
 import {Link} from "react-router-dom";
 import {toast} from "react-toastify";
+import {endPoint} from "../common/api";
 
 const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -27,7 +28,7 @@ export default function Login() {
     };
 
     const handleLogin = (values) => {
-        axios.post('http://localhost:5000/api/login', {values})
+        axios.post(endPoint('/api/login'), {values})
             .then(response => {
                 if(response.data.login_status === 'invalid'){
                     notify('Invalid email address or password! ' +
@@ -46,8 +47,9 @@ export default function Login() {
                 }
             })
             .catch(function (err) {
-
-                console.log("Error", err)
+                notify('Network Error!! ' +
+                    'Please check your server running');
+                console.log("Error11", err)
             });
 
     };

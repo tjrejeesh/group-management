@@ -7,6 +7,7 @@ import {Link} from "react-router-dom";
 import {Row} from 'react-bootstrap'
 import {Button} from "semantic-ui-react";
 import {toast} from "react-toastify";
+import {endPoint} from "../common/api";
 
 const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -34,7 +35,7 @@ const notify = (message, status) => {
 };
 
 const handleRegister = (values) => {
-    axios.post('http://localhost:5000/api/register', {values})
+    axios.post(endPoint('/api/register'), {values})
         .then(response => {
             notify('You have been successfully registered! ' +
                 'Please login to use our service', 'valid');

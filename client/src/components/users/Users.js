@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import axios from "axios";
+import {endPoint} from "../common/api";
 
 class Users extends Component{
     constructor(){
@@ -9,7 +10,7 @@ class Users extends Component{
         }
     }
     componentDidMount(){
-        axios.get('http://localhost:3000/api/users')
+        axios.get(endPoint('/api/users'))
             .then(res => {
                 const users = res.data;
                 this.setState({ users });

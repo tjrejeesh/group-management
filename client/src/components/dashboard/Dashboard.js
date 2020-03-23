@@ -5,6 +5,7 @@ import axios from "axios";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Message } from 'semantic-ui-react'
+import {endPoint} from "../common/api";
 
 const initialState = { isLoading: false, results: [], value: '' }
 
@@ -36,7 +37,7 @@ export default class Dashboard extends Component {
             if (this.state.value.length < 1) {
                 let store = JSON.parse(localStorage.getItem('token'));
                 let token = "Bearer " + store.token;
-                axios.post('http://localhost:5000/api/groups',
+                axios.post(endPoint('/api/groups'),
                     {
                         headers: {
                             'authorization': token
@@ -62,7 +63,7 @@ export default class Dashboard extends Component {
     componentDidMount(){
         let store = JSON.parse(localStorage.getItem('token'));
         let token = "Bearer " + store.token;
-        axios.post('http://localhost:5000/api/groups',
+        axios.post(endPoint('/api/groups'),
             {
                 headers: {
                     'authorization': token
@@ -110,7 +111,7 @@ export default class Dashboard extends Component {
         const loggedInUser = JSON.parse(localStorage.getItem('login'));
         const userId = loggedInUser.id;
         let token = "Bearer " + store.token;
-        axios.post('http://localhost:5000/api/group/join',
+        axios.post(endPoint('/api/group/join'),
             {
                 headers: {
                     'authorization': token
@@ -137,7 +138,7 @@ export default class Dashboard extends Component {
         const loggedInUser = JSON.parse(localStorage.getItem('login'));
         const userId = loggedInUser.id;
         let token = "Bearer " + store.token;
-        axios.post('http://localhost:5000/api/group/join',
+        axios.post(endPoint('/api/group/join'),
             {
                 headers: {
                     'authorization': token
@@ -150,7 +151,7 @@ export default class Dashboard extends Component {
             })
             .then(response => {
                 if(response.data.results.rows[0].count == 0) {
-                    axios.post('http://localhost:5000/api/group/join',
+                    axios.post(endPoint('/api/group/join'),
                         {
                             headers: {
                                 'authorization': token
@@ -171,7 +172,7 @@ export default class Dashboard extends Component {
                         window.location = '/membership';
                     }, 2000);
                 }else{
-                    axios.post('http://localhost:5000/api/group/join',
+                    axios.post(endPoint('/api/group/join'),
                         {
                             headers: {
                                 'authorization': token

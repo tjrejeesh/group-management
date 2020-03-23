@@ -6,6 +6,7 @@ import {Link} from "react-router-dom";
 import AddGroup from "../groups/AddGroup";
 import Members from "../groups/Members";
 import {toast} from "react-toastify";
+import {endPoint} from "../common/api";
 
 
 export default class MyGroup extends Component {
@@ -44,7 +45,7 @@ export default class MyGroup extends Component {
     deleteGroup = () => {
         let store = JSON.parse(localStorage.getItem('token'));
         let token = "Bearer " + store.token;
-        axios.post('http://localhost:5000/api/group/delete',
+        axios.post(endPoint('/api/group/delete'),
             {
                 headers: {
                     'authorization': token
@@ -69,7 +70,7 @@ export default class MyGroup extends Component {
         let store = JSON.parse(localStorage.getItem('token'));
         let loggedInUser = JSON.parse(localStorage.getItem('login'));
         let token = "Bearer " + store.token;
-        axios.post('http://localhost:5000/api/mygroups',
+        axios.post(endPoint('/api/mygroups'),
             {
                 headers: {
                     'authorization': token
@@ -114,7 +115,7 @@ export default class MyGroup extends Component {
         this.setState({ viewMode: true});
         let store = JSON.parse(localStorage.getItem('token'));
         let token = "Bearer " + store.token;
-        axios.post('http://localhost:5000/api/group/list',
+        axios.post(endPoint('/api/group/list'),
             {
                 headers: {
                     'authorization': token
