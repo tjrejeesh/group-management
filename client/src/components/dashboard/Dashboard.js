@@ -2,8 +2,9 @@ import _ from 'lodash'
 import React, { Component } from 'react'
 import {Icon, Table, Label, Search} from 'semantic-ui-react'
 import axios from "axios";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Message } from 'semantic-ui-react'
 
 const initialState = { isLoading: false, results: [], value: '' }
 
@@ -203,8 +204,8 @@ export default class Dashboard extends Component {
 
         return (
             <div className="show-table">
-                <ToastContainer />
-            <Table celled fixed>
+            <Message className='page-title' visible content='Listing all groups' />
+            <Table sortable celled fixed>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell colSpan='5' textAlign='right'>
@@ -235,8 +236,6 @@ export default class Dashboard extends Component {
                             Group Name
                         </Table.HeaderCell>
                         <Table.HeaderCell
-                            sorted={column === 'description' ? direction : null}
-                            onClick={this.handleSort('email')}
                         >
                              Description
                         </Table.HeaderCell>

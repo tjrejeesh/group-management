@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { Component } from 'react'
-import {Icon, Table, Label} from 'semantic-ui-react'
+import {Icon, Table, Label, Message} from 'semantic-ui-react'
 import axios from "axios";
 
 export default class Membership extends Component {
@@ -111,6 +111,7 @@ export default class Membership extends Component {
 
         return (
             <div className="show-table">
+                <Message className='page-title' visible content='Listing my membership' />
                 <Table celled fixed>
                     <Table.Header>
                         <Table.Row>

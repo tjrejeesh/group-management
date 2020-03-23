@@ -1,10 +1,11 @@
 import _ from 'lodash'
 import React, { Component } from 'react'
-import { Table, Icon, Confirm } from 'semantic-ui-react'
+import {Table, Icon, Confirm, Message} from 'semantic-ui-react'
 import axios from "axios";
 import {Link} from "react-router-dom";
 import AddGroup from "../groups/AddGroup";
 import Members from "../groups/Members";
+import {toast} from "react-toastify";
 
 
 export default class MyGroup extends Component {
@@ -23,7 +24,11 @@ export default class MyGroup extends Component {
         },
         groupMembers: null,
     };
-
+    notify = () => {
+        toast.success('You have deleted the group', {
+            position: toast.POSITION.TOP_CENTER
+        });
+    };
     open = (groupId) => {
         this.setState({ open: true, groupId: groupId });
     };
@@ -49,7 +54,10 @@ export default class MyGroup extends Component {
                 }
             })
             .then(res => {
-                window.location = '/mygroups';
+                this.notify();
+                setTimeout(function () {
+                    window.location = '/mygroups';
+                }, 2000);
             })
             .catch(function (err) {
                 console.log("Error", err)
@@ -100,23 +108,6 @@ export default class MyGroup extends Component {
 
     editGroup = (group_id) => {
         this.setState({ editMode: true, groupId: group_id});
-        /*let store = JSON.parse(localStorage.getItem('token'));
-        let token = "Bearer " + store.token;
-        axios.post('http://localhost:5000/api/group/edit',
-            {
-                headers: {
-                    'authorization': token
-                },
-                values: {
-                    group_id: group_id,
-                }
-            })
-            .then(res => {
-                this.setState({ selectedGroup: res.data.results[0] });
-            })
-            .catch(function (err) {
-                console.log("Error", err)
-            });*/
     };
 
     viewGroup = (group_id) => {
@@ -157,6 +148,7 @@ export default class MyGroup extends Component {
 
         return (
             <div className="show-table">
+                <Message className='page-title' visible content='Listing my groups' />
             <Confirm
                 open={this.state.open}
                 onCancel={this.close}
@@ -181,10 +173,11 @@ export default class MyGroup extends Component {
                 content={this.renderViewGroup()}
                 confirmButton="Close"
             />
-            <Table celled fixed>
+            <Table celled sortable fixed>
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell colSpan='5'>
+                        <Table.HeaderCell colSpan='5' textAlign='right'>
+                            <Icon name='add' size='small' color='blue'/>
                             <Link to={'/addgroup'}>Add Group</Link>
                         </Table.HeaderCell>
                     </Table.Row>
@@ -202,8 +195,6 @@ export default class MyGroup extends Component {
                             Group Name
                         </Table.HeaderCell>
                         <Table.HeaderCell
-                            sorted={column === 'description' ? direction : null}
-                            onClick={this.handleSort('email')}
                         >
                              Description
                         </Table.HeaderCell>
@@ -226,13 +217,13 @@ export default class MyGroup extends Component {
                             <Table.Cell>{description}</Table.Cell>
                             <Table.Cell>{name}</Table.Cell>
                             <Table.Cell textAlign='center'>
-                                <Icon name='eye' size='large' onClick={
+                                <Icon name='eye' color='green' size='large' onClick={
                                     () => this.viewGroup(group_id)
                                 }/>
-                                <Icon name='edit' size='large' onClick={
+                                <Icon name='edit' color='blue' size='large' onClick={
                                     () => this.editGroup(group_id)
                                 }/>
-                                <Icon name='delete' size='large' onClick={()=> this.open(group_id)} />
+                                <Icon name='delete' size='large' color='red' onClick={()=> this.open(group_id)} />
                             </Table.Cell>
                         </Table.Row>
                     ))}

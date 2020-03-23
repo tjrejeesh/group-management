@@ -6,7 +6,7 @@ import axios from 'axios';
 import {Button} from "semantic-ui-react";
 import {Row} from 'react-bootstrap'
 import {Link} from "react-router-dom";
-import {toast, ToastContainer} from "react-toastify";
+import {toast} from "react-toastify";
 
 const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -75,7 +75,6 @@ export default function Login() {
                      isSubmitting
                  }) => (
                     <form onSubmit={handleSubmit}>
-                        <ToastContainer />
                         <Row><label htmlFor="email">Email</label></Row>
                         <Row>
                             <input

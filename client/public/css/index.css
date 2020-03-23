@@ -126,6 +126,10 @@ input, textarea {
 .ui.table td i.large.icon, .ui.table td i.large.icons {
   cursor: pointer; }
 
+.page-title {
+  text-align: left !important;
+  font-weight: bold !important; }
+
 .header {
   background-color: #fff;
   box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.1);

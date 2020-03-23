@@ -5,6 +5,7 @@ import Error from "../common/Error";
 import axios from 'axios';
 import { Button } from 'semantic-ui-react';
 import {Row} from 'react-bootstrap'
+import {toast} from "react-toastify";
 
 const validationSchema = Yup.object().shape({
     gname: Yup.string()
@@ -14,6 +15,12 @@ const validationSchema = Yup.object().shape({
     description: Yup.string()
         .max(255, "Your description is too long")
 });
+
+const notify = (message) => {
+    toast.success(message, {
+        position: toast.POSITION.TOP_CENTER
+    });
+};
 
 const handleAddGroup = (values) => {
     let store = JSON.parse(localStorage.getItem('token'));
@@ -31,8 +38,10 @@ const handleAddGroup = (values) => {
             }
         })
         .then(response => {
-            window.location = '/mygroups';
-            console.log(response);
+            notify('Congratulations !! You have successfully added your group');
+            setTimeout(function () {
+                window.location = '/mygroups';
+            }, 2000);
         })
         .catch(function (err) {
             console.log("Error", err)
@@ -53,8 +62,10 @@ const handleUpdateGroup = (groupId, values) => {
             }
         })
         .then(response => {
-            window.location = '/mygroups';
-            console.log(response);
+            notify('You have successfully updated your group');
+            setTimeout(function () {
+                window.location = '/mygroups';
+            }, 2000);
         })
         .catch(function (err) {
             console.log("Error", err)
@@ -149,7 +160,7 @@ class AddGroup extends Component{
                                 />
                                 <Error touched={touched.gname} message={errors.gname}/>
                             </Row>
-                            <Row><label htmlFor="description">description</label></Row>
+                            <Row><label htmlFor="description">Description</label></Row>
                             <Row>
 
                                 <input

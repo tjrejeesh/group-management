@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Container} from 'react-bootstrap'
+import {Container} from 'react-bootstrap';
 
 import {
     BrowserRouter as Router,
@@ -16,6 +16,7 @@ import AddGroup from "./components/groups/AddGroup";
 import MyGroup from "./components/dashboard/MyGroup";
 import Members from "./components/groups/Members";
 import Membership from "./components/groups/Membership";
+import {ToastContainer} from "react-toastify";
 
 const Home = () => (
     <Dashboard />
@@ -81,6 +82,7 @@ class App extends Component {
                 <Router>
                     <Header/>
                     <Container>
+                        <ToastContainer />
                         <Switch>
                             <Route exact path="/" render={props => <UserLogin {...props} />} />
                             <Route exact path="/register" component={RegisterPage} />

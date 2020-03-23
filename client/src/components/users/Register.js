@@ -6,7 +6,7 @@ import axios from 'axios';
 import {Link} from "react-router-dom";
 import {Row} from 'react-bootstrap'
 import {Button} from "semantic-ui-react";
-import {toast, ToastContainer} from "react-toastify";
+import {toast} from "react-toastify";
 
 const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -69,7 +69,6 @@ class Register extends Component{
                          isSubmitting
                      }) => (
                         <form onSubmit={handleSubmit}>
-                            <ToastContainer />
                             <Row><label htmlFor="name">Name</label></Row>
                             <Row>
                                 <input

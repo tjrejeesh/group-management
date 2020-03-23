@@ -1,8 +1,41 @@
 import _ from 'lodash';
 import React, { Component } from 'react'
-import { Table } from 'semantic-ui-react'
+import {Icon, Table} from 'semantic-ui-react'
+import axios from "axios";
+import {toast} from "react-toastify";
 
 export default class Members extends Component {
+    notify = () => {
+        toast.success('You have removed the member from your group', {
+            position: toast.POSITION.TOP_CENTER
+        });
+    };
+    deleteMember(member_id, group_id){
+        let store = JSON.parse(localStorage.getItem('token'));
+        let token = "Bearer " + store.token;
+        axios.post('http://localhost:5000/api/group/join',
+            {
+                headers: {
+                    'authorization': token
+                },
+                values: {
+                    group_id: group_id,
+                    user_id: member_id,
+                    action: 'delete'
+                }
+            })
+            .then(response => {
+                this.notify();
+                setTimeout(function () {
+                    window.location = '/mygroups';
+                }, 2000);
+                console.log(response);
+            })
+            .catch(function (err) {
+                console.log("Error", err)
+            });
+    };
+
     render() {
         const {groupMembers} = this.props;
 
@@ -23,6 +56,10 @@ export default class Members extends Component {
                         >
                             Email
                         </Table.HeaderCell>
+                        <Table.HeaderCell textAlign='center'
+                        >
+                            Delete
+                        </Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -36,6 +73,11 @@ export default class Members extends Component {
                             <Table.Cell>{index + 1}</Table.Cell>
                             <Table.Cell>{name}</Table.Cell>
                             <Table.Cell>{email}</Table.Cell>
+                            <Table.Cell textAlign='center'>
+                                <Icon name='delete' size='large'
+                                      color='red'
+                                      onClick={()=> this.deleteMember(member_id, group_id)} />
+                            </Table.Cell>
                         </Table.Row>
                     ))}
                 </Table.Body>
