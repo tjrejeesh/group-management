@@ -39,5 +39,14 @@ input, textarea {
 }
 
 .show-table{
-  padding-top: 100px;
+  padding-top: 59px;
+}
+
+.ui.modal>.content{
+  margin-top: 50px;
+}
+.view-members-modal{
+  button:first-child{
+    display: none;
+  }
 }

@@ -313,6 +313,67 @@ app.post("/api/group/edit", verifyToken, (req, res) => {
     });
 });
 
+app.post("/api/group/list", verifyToken, (req, res) => {
+    console.log('post body', req.body);
+    jwt.verify(req.token, 'secretkey', (err, authData) => {
+        if(err){
+            res.sendStatus(403);
+        }else{
+            pool.connect(function(err, client, done) {
+                if (err) {
+                    console.log("Unable to connect to the database due to " + err);
+                }
+                const sql = 'SELECT * FROM group_members INNER JOIN users ' +
+                    'ON group_members.member_id = users.id where group_members.group_id=$1';
+                const param = [req.body.values.group_id];
+                client.query(sql, param, function(err, result) {
+                    done();
+                    if (err) {
+                        console.log(err);
+                        res.status(400).send(err);
+                    }
+                    res.json({
+                        results: result.rows,
+                        authData: authData
+                    })
+                });
+            });
+        }
+    });
+});
+
+
+app.post("/api/group/membership", verifyToken, (req, res) => {
+    console.log('post body', req.body);
+    jwt.verify(req.token, 'secretkey', (err, authData) => {
+        if(err){
+            res.sendStatus(403);
+        }else{
+            pool.connect(function(err, client, done) {
+                if (err) {
+                    console.log("Unable to connect to the database due to " + err);
+                }
+                const sql = 'select * from group_members ' +
+                    'INNER JOIN group_details ON group_details.id = group_members.group_id ' +
+                    'INNER JOIN users ON users.id = group_details.created_by ' +
+                    'where group_members.member_id = $1'
+                const param = [req.body.values.user_id];
+                client.query(sql, param, function(err, result) {
+                    done();
+                    if (err) {
+                        console.log(err);
+                        res.status(400).send(err);
+                    }
+                    res.json({
+                        results: result.rows,
+                        authData: authData
+                    })
+                });
+            });
+        }
+    });
+});
+
 app.get("/api/posts", (req, res) => {
     pool.connect(function(err, client, done) {
         if (err) {

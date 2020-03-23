@@ -11,6 +11,8 @@ import Register from "./components/users/Register";
 import Header from "./components/common/Header";
 import AddGroup from "./components/groups/AddGroup";
 import MyGroup from "./components/dashboard/MyGroup";
+import Members from "./components/groups/Members";
+import Membership from "./components/groups/Membership";
 
 const Home = () => (
     <Dashboard />
@@ -28,9 +30,18 @@ const AddGroupPage = () => (
     <AddGroup />
 );
 
+const ListMembers = () => (
+    <Members />
+);
+
 const MyGroupPage = () => (
     <MyGroup />
 );
+
+const MembershipPage = () => (
+    <Membership />
+);
+
 
 const checkAuth = () => {
     const token = localStorage.getItem('token');
@@ -69,6 +80,8 @@ class App extends Component {
                         <Switch>
                             <Route exact path="/" render={props => <UserLogin {...props} />} />
                             <Route exact path="/register" component={RegisterPage} />
+                            <AuthRoute exact path="/members" component={ListMembers} />
+                            <AuthRoute exact path="/membership" component={MembershipPage} />
                             <AuthRoute exact path="/addgroup" component={AddGroupPage} />
                             <AuthRoute exact path="/mygroups" component={MyGroupPage} />
                             <AuthRoute exact path="/home" component={Home} />

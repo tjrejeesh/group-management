@@ -1,16 +1,52 @@
 import _ from 'lodash'
 import React, { Component } from 'react'
-import {Icon, Table, Label} from 'semantic-ui-react'
+import {Icon, Table, Label, Search} from 'semantic-ui-react'
 import axios from "axios";
-import {Link} from "react-router-dom";
+
+const initialState = { isLoading: false, results: [], value: '' }
 
 export default class Dashboard extends Component {
     state = {
         column: null,
         data: null,
         direction: null,
-        token: null
+        token: null,
+        ...initialState
     };
+
+    handleResultSelect = (e, { result }) => this.setState({ value: result.title })
+
+    handleSearchChange = (e, { value }) => {
+        this.setState({ isLoading: true, value })
+        setTimeout(() => {
+            if (this.state.value.length < 1) {
+                let store = JSON.parse(localStorage.getItem('token'));
+                let token = "Bearer " + store.token;
+                axios.post('http://localhost:5000/api/groups',
+                    {
+                        headers: {
+                            'authorization': token
+                        }
+                    })
+                    .then(res => {
+                        console.log(res);
+                        const group = res.data.results;
+                        this.setState({ data: group });
+                    })
+                    .catch(function (err) {
+                        console.log("Error", err)
+                    });
+            }
+            const re = new RegExp(_.escapeRegExp(this.state.value), 'i');
+            const isMatch = (result) => re.test(result.gname);
+            this.setState({
+                isLoading: false,
+                data: _.filter(this.state.data, isMatch),
+            });
+            console.log(this.state);
+        }, 300);
+    };
+
     componentDidMount(){
         let store = JSON.parse(localStorage.getItem('token'));
         let token = "Bearer " + store.token;
@@ -29,6 +65,7 @@ export default class Dashboard extends Component {
                 console.log("Error", err)
             });
     }
+
     handleSort = (clickedColumn) => () => {
         const { column, data, direction } = this.state;
 
@@ -57,6 +94,35 @@ export default class Dashboard extends Component {
         }
     };
 
+    checkMembership(group_id){
+        let store = JSON.parse(localStorage.getItem('token'));
+        const loggedInUser = JSON.parse(localStorage.getItem('login'));
+        const userId = loggedInUser.id;
+        let token = "Bearer " + store.token;
+        axios.post('http://localhost:5000/api/group/join',
+            {
+                headers: {
+                    'authorization': token
+                },
+                values: {
+                    user_id: userId,
+                    group_id: group_id,
+                    action: 'select'
+                }
+            })
+            .then(response => {
+                if(response.data.results.rows[0].count > 0){
+                    console.log('member', group_id);
+                }else{
+                    console.log('Non member', group_id);
+                }
+            })
+            .catch(function (err) {
+                console.log("Error", err)
+            });
+        return false;
+    }
+
     handleJoinGroup = (group_id) => {
         let store = JSON.parse(localStorage.getItem('token'));
         const loggedInUser = JSON.parse(localStorage.getItem('login'));
@@ -74,7 +140,6 @@ export default class Dashboard extends Component {
                 }
             })
             .then(response => {
-                console.log(response.data.results.rows[0].count);
                 if(response.data.results.rows[0].count == 0) {
                     axios.post('http://localhost:5000/api/group/join',
                         {
@@ -119,15 +184,25 @@ export default class Dashboard extends Component {
     };
 
     render() {
-        const { column, data, direction } = this.state
+        const { column, data, direction, isLoading, value } = this.state;
 
         return (
             <div className="show-table">
             <Table celled fixed>
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell colSpan='5'>
-                            <Link to={'/addgroup'}>Add Group</Link>
+                        <Table.HeaderCell colSpan='5' textAlign='right'>
+                            <Search
+                                loading={isLoading}
+                                placeholder={"Search by group name"}
+                                onResultSelect={this.handleResultSelect}
+                                onSearchChange={_.debounce(this.handleSearchChange, 500, {
+                                    leading: true,
+                                })}
+                                showNoResults={false}
+                                value={value}
+                                {...this.props}
+                            />
                         </Table.HeaderCell>
                     </Table.Row>
                     <Table.Row>
@@ -155,7 +230,7 @@ export default class Dashboard extends Component {
                         >
                             Created By
                         </Table.HeaderCell>
-                        <Table.HeaderCell textAlign='center'>
+                        <Table.HeaderCell textAlign='center' verticalAlign='top'>
                             Joined?
                         </Table.HeaderCell>
                     </Table.Row>
@@ -170,10 +245,12 @@ export default class Dashboard extends Component {
                                 {this.handleJoinStatus(member_id) ? <Label ribbon color='green'>Me</Label> : name}
                              </Table.Cell>
                             <Table.Cell textAlign='center'>
+                                {this.checkMembership(group_id)}
                                 {this.handleJoinStatus(member_id) ?
                                     <label>Admin</label>
                                     :
-                                    <Icon name='thumbs down outline' size='large' color='red'
+                                    <Icon name='thumbs down outline' size='large'
+                                          color={this.checkMembership(group_id) ? 'green' : 'red'}
                                           title='Please click to join'
                                           onClick={() => this.handleJoinGroup(group_id)}
                                     />

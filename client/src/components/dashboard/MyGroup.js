@@ -4,6 +4,7 @@ import { Table, Icon, Confirm } from 'semantic-ui-react'
 import axios from "axios";
 import {Link} from "react-router-dom";
 import AddGroup from "../groups/AddGroup";
+import Members from "../groups/Members";
 
 
 export default class MyGroup extends Component {
@@ -15,10 +16,12 @@ export default class MyGroup extends Component {
         open: false,
         groupId: '',
         editMode: false,
+        viewMode: false,
         selectedGroup: {
             gname: null,
             description: null
-        }
+        },
+        groupMembers: null,
     };
 
     open = (groupId) => {
@@ -32,6 +35,12 @@ export default class MyGroup extends Component {
     };
     confirmEdit = () => {
         this.setState({ editMode: false });
+    };
+    closeView = () => {
+        this.setState({ viewMode: false });
+    };
+    confirmView = () => {
+        this.setState({ viewMode: false });
     };
     deleteGroup = () => {
         let store = JSON.parse(localStorage.getItem('token'));
@@ -116,9 +125,36 @@ export default class MyGroup extends Component {
             });
     };
 
+    viewGroup = (group_id) => {
+        this.setState({ viewMode: true});
+        let store = JSON.parse(localStorage.getItem('token'));
+        let token = "Bearer " + store.token;
+        axios.post('http://localhost:5000/api/group/list',
+            {
+                headers: {
+                    'authorization': token
+                },
+                values: {
+                    group_id: group_id,
+                }
+            })
+            .then(res => {
+                this.setState({ groupMembers: res.data.results});
+            })
+            .catch(function (err) {
+                console.log("Error", err)
+            });
+    };
+
     renderAddGroup(){
         return (
             <div className="show-table"><AddGroup selectedGroup={this.state.selectedGroup}/></div>
+        );
+    };
+
+    renderViewGroup(){
+        return (
+            <div className="show-table"><Members groupMembers={this.state.groupMembers}/></div>
         );
     }
 
@@ -132,8 +168,8 @@ export default class MyGroup extends Component {
                 onCancel={this.close}
                 onConfirm={this.deleteGroup}
                 content="Do you want to delete the group?"
-                confirmButton="Yes"
-                cancelButton="No"
+                confirmButton="Delete"
+                cancelButton="Cancel"
             />
             <Confirm
                 className="update-modal"
@@ -142,8 +178,16 @@ export default class MyGroup extends Component {
                 onCancel={this.closeEdit}
                 onConfirm={this.confirmEdit}
                 content={this.renderAddGroup()}
-                confirmButton="Yes"
-                cancelButton="No"
+                confirmButton="Update"
+                cancelButton="Cancel"
+            />
+            <Confirm
+                className="view-members-modal"
+                header={'Members in the group'}
+                open={this.state.viewMode}
+                onConfirm={this.confirmView}
+                content={this.renderViewGroup()}
+                confirmButton="Close"
             />
             <Table celled fixed>
                 <Table.Header>
@@ -190,9 +234,11 @@ export default class MyGroup extends Component {
                             <Table.Cell>{description}</Table.Cell>
                             <Table.Cell>{name}</Table.Cell>
                             <Table.Cell textAlign='center'>
-                                <Icon name='eye' size='large'/>
+                                <Icon name='eye' size='large' onClick={
+                                    () => this.viewGroup(group_id)
+                                }/>
                                 <Icon name='edit' size='large' onClick={
-                                    ()=> this.editGroup(group_id)
+                                    () => this.editGroup(group_id)
                                 }/>
                                 <Icon name='delete' size='large' onClick={()=> this.open(group_id)} />
                             </Table.Cell>
