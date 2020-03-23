@@ -2,6 +2,7 @@ import _ from 'lodash'
 import React, { Component } from 'react'
 import {Icon, Table, Label, Message} from 'semantic-ui-react'
 import axios from "axios";
+import {toast} from "react-toastify";
 
 export default class Membership extends Component {
     state = {
@@ -33,6 +34,11 @@ export default class Membership extends Component {
             });
     }
 
+    notify = (message) => {
+        toast.success(message, {
+            position: toast.POSITION.TOP_CENTER
+        });
+    };
 
     handleJoinStatus = (memberId) =>{
         const loggedInUser = JSON.parse(localStorage.getItem('login'));
@@ -90,12 +96,16 @@ export default class Membership extends Component {
                             }
                         })
                         .then(response => {
+                            this.notify('You have successfully ' +
+                                'unsubscribed from the group');
+                            setTimeout(function () {
+                                window.location = '/membership';
+                            }, 2000);
                         })
                         .catch(function (err) {
                             console.log("Error", err)
                         });
                 }
-                window.location = '/membership';
             })
             .catch(function (err) {
                 console.log("Error", err)
